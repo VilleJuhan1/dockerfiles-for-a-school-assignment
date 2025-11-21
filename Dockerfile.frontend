@@ -14,18 +14,14 @@ FROM node:16-alpine
 
 WORKDIR /app
 
-# Create a non-root user
-RUN addgroup -g 1001 appuser && \
-  adduser -D -u 1001 -G appuser appuser
-
 # Copy only the build output from builder
 COPY --from=builder /usr/src/app/build ./build
 
-# Install serve globally
-RUN npm install -g serve
-
-# Set ownership to appuser
-RUN chown -R appuser:appuser /app
+# Create a non-root user
+RUN addgroup -g 1001 appuser && \
+  adduser -D -u 1001 -G appuser appuser && \
+  npm install -g serve && \
+  chown -R appuser:appuser /app
 
 # Switch to non-root user
 USER appuser
